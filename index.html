@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ChatCoin Official Miner</title>
+    <style>
+        body {
+            margin: 0;
+            background: radial-gradient(circle at center, #220044, #0a0014);
+            font-family: Arial;
+            color: #7de7ff;
+            text-align: center;
+        }
+
+        .title {
+            margin-top: 20px;
+            font-size: 32px;
+            color: #8fe8ff;
+            text-shadow: 0 0 10px #62caff;
+        }
+
+        .display-number {
+            margin-top: 25px;
+            font-size: 48px;
+            font-weight: bold;
+            letter-spacing: 5px;
+            text-shadow: 0 0 20px #7de7ff;
+        }
+
+        .miner-box {
+            margin-top: 25px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 15px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .current {
+            margin-top: 10px;
+            font-size: 32px;
+            text-shadow: 0 0 15px #62caff;
+        }
+
+        button {
+            width: 200px;
+            margin-top: 25px;
+            padding: 10px;
+            font-size: 22px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            color: white;
+            background: linear-gradient(135deg, #0088ff, #00eaff);
+            box-shadow: 0 0 10px #00eaff;
+        }
+
+        button:hover {
+            box-shadow: 0 0 20px #00eaff;
+        }
+
+        .balance-box {
+            margin-top: 20px;
+            font-size: 22px;
+        }
+
+        /* чек */
+        #modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+        }
+
+        #modalContent {
+            background: #111;
+            margin: 150px auto;
+            padding: 20px;
+            width: 350px;
+            color: #7de7ff;
+            border-radius: 15px;
+            box-shadow: 0 0 20px #00eaff;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<h1 class="title">ChatCoin Official Miner</h1>
+
+<div class="display-number" id="target">00000000</div>
+
+<div class="miner-box">
+    <div>Перебираю:</div>
+    <div class="current" id="try">00000000</div>
+</div>
+
+<button id="startBtn">НАЧАТЬ</button>
+
+<div class="balance-box">
+    Баланс: <span id="balance">0</span> CHC
+</div>
+
+<button id="withdrawBtn">ВЫВОД</button>
+
+<div id="modal">
+    <div id="modalContent">
+        <h2>Чек CHC</h2>
+        <p id="modalText"></p>
+        <button onclick="closeModal()">Закрыть</button>
+    </div>
+</div>
+
+<script src="script.js"></script>
+
+</body>
+</html>
