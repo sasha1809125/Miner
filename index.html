@@ -1,116 +1,140 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>ChatCoin Official Miner</title>
-    <style>
-        body {
-            margin: 0;
-            background: radial-gradient(circle at center, #220044, #0a0014);
-            font-family: Arial;
-            color: #7de7ff;
-            text-align: center;
-        }
-
-        .title {
-            margin-top: 20px;
-            font-size: 32px;
-            color: #8fe8ff;
-            text-shadow: 0 0 10px #62caff;
-        }
-
-        .display-number {
-            margin-top: 25px;
-            font-size: 48px;
-            font-weight: bold;
-            letter-spacing: 5px;
-            text-shadow: 0 0 20px #7de7ff;
-        }
-
-        .miner-box {
-            margin-top: 25px;
-            background: rgba(255,255,255,0.05);
-            border-radius: 15px;
-            padding: 20px;
-            backdrop-filter: blur(10px);
-        }
-
-        .current {
-            margin-top: 10px;
-            font-size: 32px;
-            text-shadow: 0 0 15px #62caff;
-        }
-
-        button {
-            width: 200px;
-            margin-top: 25px;
-            padding: 10px;
-            font-size: 22px;
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: white;
-            background: linear-gradient(135deg, #0088ff, #00eaff);
-            box-shadow: 0 0 10px #00eaff;
-        }
-
-        button:hover {
-            box-shadow: 0 0 20px #00eaff;
-        }
-
-        .balance-box {
-            margin-top: 20px;
-            font-size: 22px;
-        }
-
-        /* чек */
-        #modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.7);
-        }
-
-        #modalContent {
-            background: #111;
-            margin: 150px auto;
-            padding: 20px;
-            width: 350px;
-            color: #7de7ff;
-            border-radius: 15px;
-            box-shadow: 0 0 20px #00eaff;
-            text-align: center;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Магазин - Админ панель + Корзина</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>🛒 Магазин</h1>
+            <div class="header-buttons">
+                <button id="adminToggleBtn" class="admin-toggle">🔧 Админ-панель</button>
+                <div class="cart-icon" id="cartIcon">
+                    🛍️ Корзина (<span id="cartCount">0</span>)
+                </div>
+            </div>
+        </header>
 
-<h1 class="title">ChatCoin Official Miner</h1>
+        <!-- Админ-панель (скрыта по умолчанию) -->
+        <div id="adminPanel" class="admin-panel" style="display: none;">
+            <h2>🔧 Управление товарами</h2>
+            <div class="admin-form">
+                <input type="text" id="productName" placeholder="Название товара" required>
+                <input type="number" id="productPrice" placeholder="Цена в $" step="0.01" required>
+                <button id="addProductBtn">➕ Добавить товар</button>
+            </div>
+            <h3>Существующие товары:</h3>
+            <div id="adminProductsList" class="admin-products-list"></div>
+            <hr>
+            <div class="admin-email-info">
+                <p>📧 Уведомления будут отправляться на: <strong>zeleninsasha2012@icloud.com</strong></p>
+                <button id="testEmailBtn" class="test-email-btn">📧 Тестовое письмо</button>
+            </div>
+        </div>
 
-<div class="display-number" id="target">00000000</div>
+        <div class="main-content">
+            <!-- Каталог товаров -->
+            <div class="products-grid" id="productsGrid">
+                <!-- Товары будут добавлены через JS -->
+            </div>
 
-<div class="miner-box">
-    <div>Перебираю:</div>
-    <div class="current" id="try">00000000</div>
-</div>
+            <!-- Корзина и оформление -->
+            <div class="cart-section" id="cartSection">
+                <h2>Ваша корзина</h2>
+                <div id="cartItemsList" class="cart-items">
+                    <p class="empty-cart">Корзина пуста</p>
+                </div>
+                <div id="cartTotal" class="cart-total">Итого: $0.00</div>
 
-<button id="startBtn">НАЧАТЬ</button>
+                <hr>
 
-<div class="balance-box">
-    Баланс: <span id="balance">0</span> CHC
-</div>
+                <h3>Детали доставки и услуг</h3>
+                
+                <!-- Тарифы доставки -->
+                <div class="form-group">
+                    <label>🚚 Тариф доставки:</label>
+                    <select id="deliveryTariff">
+                        <option value="Super Economy:0.99">Super Economy: 0.99$ (до 3 дней)</option>
+                        <option value="Economy:2.99">Economy: 2.99$ (1-2 дня)</option>
+                        <option value="Standard:4.99">Standard: 4.99$ (1-2 дня, базовый трекинг)</option>
+                        <option value="FreeFast:6.99">FreeFast: 6.99$ (от 1 дня, без очереди, декларация)</option>
+                        <option value="Speedy Delivery:9.99">Speedy Delivery: 9.99$ (день в день, трекинг, страхование)</option>
+                        <option value="SuperFast:11.99">SuperFast: 11.99$ (день в день, SMS трекинг)</option>
+                        <option value="Express:14.99">Express: 14.99$ (за 30 мин, трекинг онлайн)</option>
+                        <option value="Universal:9.99">Universal: 9.99$ (для крупных заказов, до 0.5кг)</option>
+                        <option value="International:25.99">International: 25.99$ (до недели, документы)</option>
+                        <option value="Самовывоз:0">Самовывоз (уведомление на склад)</option>
+                    </select>
+                </div>
 
-<button id="withdrawBtn">ВЫВОД</button>
+                <!-- Страхование -->
+                <div class="form-group">
+                    <label>🛡️ Страхование:</label>
+                    <select id="insurance">
+                        <option value="Без страхования:0">Без страхования</option>
+                        <option value="Начальное страхование:1_per_5">Начальное страхование: 1$ за каждые 5$ в заказе</option>
+                        <option value="Базовое страхование:3_per_10">Базовое страхование: 3$ за каждые 10$ в заказе</option>
+                        <option value="Полное страхование:5_per_10g">Полное страхование: 5$ за 10г заказа</option>
+                        <option value="Страхование доставки:2_per_15g">Страхование доставки: 2$ за 15г заказа</option>
+                    </select>
+                </div>
 
-<div id="modal">
-    <div id="modalContent">
-        <h2>Чек CHC</h2>
-        <p id="modalText"></p>
-        <button onclick="closeModal()">Закрыть</button>
+                <!-- Дополнительные услуги (множественный выбор) -->
+                <div class="form-group">
+                    <label>✨ Дополнительные услуги:</label>
+                    <div class="checkbox-group" id="extraServices">
+                        <label><input type="checkbox" value="Ускоренная обработка:2.99"> Ускоренная обработка (+2.99$)</label>
+                        <label><input type="checkbox" value="Заполнение декларации нашими специалистами:5.99"> Заполнение декларации (+5.99$)</label>
+                        <label><input type="checkbox" value="Ускоренная сборка заказа:2.99"> Ускоренная сборка (+2.99$)</label>
+                        <label><input type="checkbox" value="3 Фотографии товара на складе:5_black_white"> 3 Фотографии: ч/б физический (+5$)</label>
+                        <label><input type="checkbox" value="3 Фотографии товара на складе:8_color_digital"> 3 Фотографии: цветной цифровой (+8$)</label>
+                        <label><input type="checkbox" value="Фотография товара на весах:2"> Фотография товара на весах (+2$)</label>
+                    </div>
+                </div>
+
+                <!-- Способ доставки (получения) -->
+                <div class="form-group">
+                    <label>📦 Способ получения:</label>
+                    <select id="deliveryMethod">
+                        <option value="До отделения:0">До отделения (бесплатно)</option>
+                        <option value="До двери:4.99">До двери (+4.99$)</option>
+                        <option value="В руки:8.99">В руки (20 мин. ожидания) (+8.99$)</option>
+                        <option value="Через партнера:1.99">Через партнера (+1.99$)</option>
+                    </select>
+                </div>
+
+                <!-- Оформление документов -->
+                <div class="form-group">
+                    <label>📄 Оформление документов:</label>
+                    <select id="documentType">
+                        <option value="Через Schengen VISA:1">Через Schengen VISA (+1$ без налога)</option>
+                        <option value="Через West Euro Visa:3">Через West Euro Visa (+3$ без налога)</option>
+                        <option value="Через прочие документы:1_with_tax">Через прочие документы (+1$ + налоги 15% и 3%)</option>
+                        <option value="Без документов:1-5">Без документов (уточните у дилера: 1-5$)</option>
+                    </select>
+                </div>
+
+                <button id="checkoutBtn" class="checkout-btn">✅ Оформить заказ</button>
+            </div>
+        </div>
     </div>
-</div>
 
-<script src="script.js"></script>
+    <!-- Модальное окно (скрыто) -->
+    <div id="notificationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>📬 Уведомление о заказе</h3>
+            <div id="modalMessage" class="modal-message"></div>
+            <div class="modal-buttons">
+                <button id="copyToClipboardBtn" class="copy-btn">📋 Скопировать</button>
+                <button id="closeModalBtn" class="close-btn">Закрыть</button>
+            </div>
+        </div>
+    </div>
 
+    <script src="script.js"></script>
 </body>
 </html>
