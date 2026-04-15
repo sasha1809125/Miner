@@ -3,86 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Доставка товаров - Оформление</title>
-    <style>
-        :root { --primary: #2563eb; --bg: #f8fafc; --card: #ffffff; --danger: #ef4444; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg); color: #333; line-height: 1.4; margin: 0; padding: 15px; }
-        .container { max-width: 700px; margin: 0 auto; background: var(--card); padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h2 { color: var(--primary); text-align: center; margin-top: 0; }
-        
-        .nav-buttons { display: flex; gap: 10px; justify-content: center; margin-bottom: 20px; }
-        .btn { padding: 12px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: 0.3s; }
-        .btn-main { background: var(--primary); color: white; width: 100%; font-size: 16px; }
-        .btn-main:disabled { background: #cbd5e1; cursor: not-allowed; }
-        .btn-alt { background: #64748b; color: white; }
-        
-        .form-group { margin-bottom: 12px; }
-        label { display: block; font-weight: bold; margin-bottom: 4px; font-size: 14px; }
-        select, input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        input.error { border-color: var(--danger); background: #fef2f2; }
-        .error-msg { color: var(--danger); font-size: 12px; margin-top: 4px; display: none; }
-
-        .services-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: #f1f5f9; padding: 10px; border-radius: 6px; }
-        .services-grid label { font-weight: normal; font-size: 13px; display: flex; align-items: center; gap: 5px; cursor: pointer; }
-        .services-grid input { width: auto; }
-
-        .price-display { font-size: 1.4em; font-weight: bold; color: #059669; text-align: right; margin: 15px 0; padding: 10px; border-top: 2px solid #eee; }
-        
-        .copy-box { background: #fffbeb; border: 1px dashed #d97706; padding: 15px; margin-top: 20px; display: none; }
-        .email-text { background: white; padding: 10px; border: 1px solid #ddd; white-space: pre-wrap; font-family: monospace; font-size: 13px; margin-bottom: 10px; }
-    </style>
+    <title>Slimes Hub | Delivery & Transfer</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div class="container">
-    <div class="nav-buttons">
-        <button class="btn btn-alt" onclick="showSection('send-section')">Отправить</button>
-        <button class="btn btn-alt" onclick="showSection('receive-section')">Получить</button>
+    <div class="header">
+        <h3 style="margin:0">📦 Slimes Hub</h3>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
     </div>
 
-    <!-- СЕКЦИЯ: ОТПРАВИТЬ -->
-    <div id="send-section" class="section active">
-        <h2>Оформление заказа</h2>
-        
+    <div class="nav-tabs">
+        <button class="tab-btn active" id="btn-delivery" onclick="openTab('delivery')">ДОСТАВКА</button>
+        <button class="tab-btn" id="btn-track" onclick="openTab('track')">ТРЕКИНГ</button>
+        <button class="tab-btn" id="btn-transfer" onclick="openTab('transfer')">ПЕРЕВОДЫ</button>
+    </div>
+
+    <!-- ДОСТАВКА -->
+    <div id="section-delivery" class="section active">
         <div class="form-group">
             <label>Тариф:</label>
             <select id="tariff" onchange="calculate()">
-                <option value="0.09">Super Economy ($0.09)</option>
-                <option value="0.29">Economy ($0.29)</option>
-                <option value="0.49">Standard ($0.49)</option>
-                <option value="0.69">FreeFast ($0.69)</option>
-                <option value="0.99">Speedy Delivery ($0.99)</option>
-                <option value="1.19">SuperFast ($1.19)</option>
-                <option value="1.49">Express ($1.49)</option>
-                <option value="1.99" id="opt-universal">Universal ($1.99) [ДО 10 КГ]</option>
-                <option value="2.59">International ($2.59)</option>
+                <option value="0.09">Super Economy ($0.09) - до 3 дней</option>
+                <option value="0.29">Economy ($0.29) - 1-2 дня</option>
+                <option value="0.49">Standard ($0.49) - Трекинг</option>
+                <option value="0.69">FreeFast ($0.69) - Без очереди</option>
+                <option value="0.99">Speedy Delivery ($0.99) - День в день</option>
+                <option value="1.19">SuperFast ($1.19) - SMS Трекинг</option>
+                <option value="1.49">Express ($1.49) - 30 минут</option>
+                <option value="1.99" id="universal-opt">Universal ($1.99) - до 10кг</option>
+                <option value="2.59">International ($2.59) - Другие отряды</option>
                 <option value="0">Самовывоз (Бесплатно)</option>
             </select>
         </div>
 
-        <div style="display: flex; gap: 10px;">
-            <div class="form-group" style="flex:1">
-                <label>Вес (грамм):</label>
-                <input type="number" id="weight" value="0" oninput="calculate()">
-                <div id="weight-error" class="error-msg">Превышен лимит веса для тарифа!</div>
+        <div class="grid-2">
+            <div class="form-group">
+                <label id="w-label">Вес (г): [Макс 3кг]</label>
+                <input type="number" id="weight" value="100" oninput="calculate()">
             </div>
-            <div class="form-group" style="flex:1">
-                <label>Сумма заказа ($):</label>
+            <div class="form-group">
+                <label>Стоимость заказа ($):</label>
                 <input type="number" id="orderSum" value="0" oninput="calculate()">
             </div>
         </div>
 
-        <label>Дополнительные услуги:</label>
-        <div class="services-grid">
-            <label><input type="checkbox" class="extra-service" value="2.99" onchange="calculate()"> Ускор. обработка ($2.99)</label>
-            <label><input type="checkbox" class="extra-service" value="5.99" onchange="calculate()"> Декларация профи ($5.99)</label>
-            <label><input type="checkbox" class="extra-service" value="2.99" onchange="calculate()"> Ускор. сборка ($2.99)</label>
-            <label><input type="checkbox" class="extra-service" value="5" onchange="calculate()"> Фото ч/б ($5)</label>
-            <label><input type="checkbox" class="extra-service" value="8" onchange="calculate()"> Фото цвет ($8)</label>
-            <label><input type="checkbox" class="extra-service" value="2" onchange="calculate()"> Фото на весах ($2)</label>
-        </div>
-
-        <div class="form-group" style="margin-top:10px;">
+        <div class="form-group">
             <label>Страхование:</label>
             <select id="insurance" onchange="calculate()">
                 <option value="none">Без страхования</option>
@@ -94,146 +61,79 @@
         </div>
 
         <div class="form-group">
-            <label>Документы:</label>
+            <label>Оформление / Документы:</label>
             <select id="docs" onchange="calculate()">
-                <option value="schengen">Schengen VISA ($1)</option>
-                <option value="west">West Euro Visa ($0-$3)</option>
+                <option value="schengen">Schengen VISA ($1, без налога)</option>
+                <option value="west">West Euro Visa ($1.50, без налога)</option>
                 <option value="other">Прочие документы ($1 + 18% сборы)</option>
-                <option value="none">Без документов ($0-$5)</option>
+                <option value="none">Без документов ($2.50)</option>
             </select>
         </div>
 
-        <div class="form-group">
+        <label>Дополнительные услуги:</label>
+        <div class="services-grid">
+            <label><input type="checkbox" class="extra" value="2.99" onchange="calculate()"> Ускор. обработка</label>
+            <label><input type="checkbox" class="extra" value="5.99" onchange="calculate()"> Декларация (профи)</label>
+            <label><input type="checkbox" class="extra" value="2.99" onchange="calculate()"> Ускор. сборка</label>
+            <label><input type="checkbox" class="extra" value="5" onchange="calculate()"> Фото ч/б (физ)</label>
+            <label><input type="checkbox" class="extra" value="8" onchange="calculate()"> Фото цвет (цифра)</label>
+            <label><input type="checkbox" class="extra" value="2" onchange="calculate()"> Фото на весах</label>
+        </div>
+
+        <div class="form-group" style="margin-top:15px">
             <label>Способ получения:</label>
-            <select id="deliveryMethod" onchange="toggleAddress()">
-                <option value="0">До отделения (Бесплатно)</option>
+            <select id="method" onchange="toggleAddr()">
+                <option value="0">В отделении (Бесплатно)</option>
                 <option value="0.49">До двери ($0.49)</option>
                 <option value="0.89">В руки ($0.89)</option>
-                <option value="1.5">Через партнера (~$1.50)</option>
+                <option value="1.5">Партнер (~$1.50)</option>
             </select>
         </div>
 
-        <div id="address-block" style="display: none; background: #fff; border: 1px solid var(--primary); padding: 10px; border-radius: 6px;">
-            <label style="color: var(--primary)">Адрес встречи:</label>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 5px;">
-                <input type="text" id="corp" placeholder="Корпус">
-                <input type="text" id="room" placeholder="Комната">
-                <input type="text" id="receiver" placeholder="Имя получателя">
-                <input type="text" id="zip" placeholder="Zip-code">
+        <div id="addr-fields" class="hidden">
+            <label style="color:var(--primary)">Адрес встречи:</label>
+            <div class="grid-2">
+                <input type="text" id="a1" placeholder="Корпус">
+                <input type="text" id="a2" placeholder="Комната">
+                <input type="text" id="a3" placeholder="Имя получателя">
+                <input type="text" id="a4" placeholder="Zip-code">
             </div>
         </div>
 
-        <div class="price-display">Итого: $<span id="totalPrice">0.00</span></div>
-        
-        <button id="submit-btn" class="btn btn-main" onclick="generateEmail()">ОФОРМИТЬ И ЗАПИСАТЬСЯ</button>
-
-        <div id="copy-box-send" class="copy-box">
-            <p><strong>Кому:</strong> slimes.upon-7k@icloud.com</p>
-            <div id="email-body-send" class="email-text"></div>
-            <button class="btn btn-alt" style="width:100%" onclick="copyText('email-body-send')">Скопировать текст письма</button>
-        </div>
+        <div class="price-card">ИТОГО К ОПЛАТЕ: $<span id="total-del">0.00</span></div>
+        <button class="btn-action" id="btn-del-main" onclick="processOrder('delivery')">ОФОРМИТЬ ДОСТАВКУ</button>
     </div>
 
-    <!-- СЕКЦИЯ: ПОЛУЧИТЬ -->
-    <div id="receive-section" class="section">
-        <h2>Получение</h2>
-        <div class="form-group">
-            <label>Ваш Трек-номер:</label>
-            <input type="text" id="trackNumber" placeholder="Введите номер">
-        </div>
-        <button class="btn btn-main" onclick="sendTrack()">ОТПРАВИТЬ ТРЕК</button>
+    <!-- ТРЕКИНГ -->
+    <div id="section-track" class="section">
+        <div class="info-box">Введите трек-номер для проверки статуса.</div>
+        <input type="text" id="track-input" placeholder="SLM-XXX-X">
+        <button class="btn-action" style="margin-top:15px" onclick="checkTrackFromSheet()">ПРОВЕРИТЬ</button>
+        <div id="track-status-res" class="status-res"></div>
+    </div>
 
-        <div id="copy-box-receive" class="copy-box">
-            <p><strong>Кому:</strong> slimes.upon-7k@icloud.com</p>
-            <div id="email-body-receive" class="email-text"></div>
+    <!-- ПЕРЕВОДЫ -->
+    <div id="section-transfer" class="section">
+        <div class="info-box">Swift-Bypass: обход санкций. Комиссия 5%.</div>
+        <div class="form-group">
+            <label>Сумма перевода ($):</label>
+            <input type="number" id="trans-amount" value="100" oninput="calcTrans()">
         </div>
+        <div class="form-group">
+            <label>Страна назначения:</label>
+            <input type="text" id="trans-country" placeholder="Куда отправляем?">
+        </div>
+        <div class="price-card">К ПОЛУЧЕНИЮ: $<span id="total-trans">95.00</span></div>
+        <button class="btn-action" onclick="processOrder('transfer')">ЗАЯВКА НА ПЕРЕВОД</button>
+    </div>
+
+    <div id="copy-box" class="copy-box">
+        <p>Отправьте на: <strong>slimes.upon-7k@icloud.com</strong></p>
+        <div id="email-text" class="email-pre"></div>
+        <button class="copy-btn" onclick="copyResult()">КОПИРОВАТЬ</button>
     </div>
 </div>
 
-<script>
-    const MY_EMAIL = "slimes.upon-7k@icloud.com";
-
-    function showSection(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.copy-box').forEach(b => b.style.display = 'none');
-    }
-
-    function toggleAddress() {
-        const method = document.getElementById('deliveryMethod').value;
-        document.getElementById('address-block').style.display = method === "0" ? "none" : "block";
-        calculate();
-    }
-
-    function calculate() {
-        let total = 0;
-        const tariffSelect = document.getElementById('tariff');
-        const tariffValue = parseFloat(tariffSelect.value);
-        const isUniversal = tariffSelect.options[tariffSelect.selectedIndex].id === 'opt-universal';
-        
-        // Валидация веса
-        const w = parseFloat(document.getElementById('weight').value) || 0;
-        const limit = isUniversal ? 10000 : 3000; // в граммах
-        const weightInput = document.getElementById('weight');
-        const errorMsg = document.getElementById('weight-error');
-        const submitBtn = document.getElementById('submit-btn');
-
-        if (w > limit) {
-            weightInput.classList.add('error');
-            errorMsg.style.display = 'block';
-            errorMsg.innerText = `Лимит для этого тарифа: ${limit/1000} кг!`;
-            submitBtn.disabled = true;
-        } else {
-            weightInput.classList.remove('error');
-            errorMsg.style.display = 'none';
-            submitBtn.disabled = false;
-        }
-
-        total += tariffValue;
-        document.querySelectorAll('.extra-service:checked').forEach(s => total += parseFloat(s.value));
-
-        const s = parseFloat(document.getElementById('orderSum').value) || 0;
-        const ins = document.getElementById('insurance').value;
-        if (ins === 'initial') total += Math.floor(s / 5) * 1;
-        if (ins === 'basic') total += Math.floor(s / 10) * 3;
-        if (ins === 'full') total += (w / 10) * 5;
-        if (ins === 'delivery') total += (w / 15) * 2;
-
-        const doc = document.getElementById('docs').value;
-        if (doc === 'schengen') total += 1;
-        if (doc === 'west') total += 1.5;
-        if (doc === 'other') { total += 1; total += (s * 0.18); }
-        if (doc === 'none') total += 2.5;
-
-        total += parseFloat(document.getElementById('deliveryMethod').value);
-        document.getElementById('totalPrice').innerText = total.toFixed(2);
-    }
-
-    function generateEmail() {
-        const tariff = document.getElementById('tariff').options[document.getElementById('tariff').selectedIndex].text;
-        const userEmail = prompt("Введите вашу почту для подписи:");
-        const text = `Добрый день!\nМне необходимо отправить посылку, через тариф ${tariff}.\n\nСпасибо за сотрудничество,\nс уважением,\n${userEmail || 'Клиент'}`;
-        
-        document.getElementById('email-body-send').innerText = text;
-        document.getElementById('copy-box-send').style.display = 'block';
-        window.location.href = `mailto:${MY_EMAIL}?subject=Заказ доставки&body=${encodeURIComponent(text)}`;
-    }
-
-    function sendTrack() {
-        const track = document.getElementById('trackNumber').value;
-        if(!track) return alert("Введите трек!");
-        document.getElementById('email-body-receive').innerText = track;
-        document.getElementById('copy-box-receive').style.display = 'block';
-        window.location.href = `mailto:${MY_EMAIL}?subject=Трек-номер&body=${encodeURIComponent(track)}`;
-    }
-
-    function copyText(id) {
-        const text = document.getElementById(id).innerText;
-        navigator.clipboard.writeText(text);
-        alert("Текст скопирован!");
-    }
-
-    calculate();
-</script>
+<script src="script.js"></script>
 </body>
 </html>
